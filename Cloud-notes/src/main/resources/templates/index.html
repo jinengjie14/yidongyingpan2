@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="../static/js/jquery-1.11.3.min.js" th:src="@{/js/jquery-1.11.3.min.js}"></script>
+    <script src="../static/js/index.js" th:src="@{/js/index.js}"></script>
+    <link rel="stylesheet" href="../static/css/mui.min.css" th:href="@{/css/mui.min.css}">
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="../static/css/material-icons.css" th:href="@{/css/material-icons.css}">
+    <script src="../static/js/mui.min.js" th:src="@{/js/mui.min.js}"></script>
+
+    <script src="../static/js/script.js" th:src="@{/js/script.js}"></script>
+    <script src="../static/js/share.js" th:src="@{/js/share.js}"></script>
+    <script src="../static/js/wysiwyg.js" th:src="@{/js/wysiwyg.js}"></script>
+    <script src="../static/js/viewer.min.js" th:src="@{/js/viewer.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/fakeLoader.css}">
+
+
+    <!-- 编辑器 -->
+    <link href="../static/bootstrap-wysiwyg/external/google-code-prettify/prettify.css" th:href="@{/bootstrap-wysiwyg/external/google-code-prettify/prettify.css}"
+        rel="stylesheet">
+    <!-- <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet"> -->
+<!--     <link rel="stylesheet" href="../static/bootstrap-wysiwyg/css/bootstrap-combined.no-icons.min.css" th:href="@{/bootstrap-wysiwyg/css/bootstrap-combined.no-icons.min.css}"> -->
+    <link rel="stylesheet" href="../static/bootstrap-wysiwyg/css/bootstrap-responsive.min.css" th:href="@{/bootstrap-wysiwyg/css/bootstrap-responsive.min.css}">
+    <link rel="stylesheet" href="../static/bootstrap-wysiwyg/css/font-awesome.css" th:href="@{/bootstrap-wysiwyg/css/font-awesome.css}">
+    <script src="../static/bootstrap-wysiwyg/external/jquery-1.11.3.min.js" th:src="@{/bootstrap-wysiwyg/external/jquery-1.11.3.min.js}"></script>
+    <script src="../static/bootstrap-wysiwyg/external/jquery.hotkeys.js" th:src="@{/bootstrap-wysiwyg/external/jquery.hotkeys.js}"></script>
+    <!-- <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script> -->
+    <script src="../static/bootstrap-wysiwyg/external/bootstrap.min.js" th:src="@{/bootstrap-wysiwyg/external/bootstrap.min.js}"></script>
+    <script src="../static/bootstrap-wysiwyg/external/google-code-prettify/prettify.js" th:src="@{/bootstrap-wysiwyg/external/google-code-prettify/prettify.js}"></script>
+    <link href="../static/bootstrap-wysiwyg/index.css" th:href="@{/bootstrap-wysiwyg/index.css}" rel="stylesheet">
+    <script src="../static/bootstrap-wysiwyg/bootstrap-wysiwyg.js" th:src="@{/bootstrap-wysiwyg/bootstrap-wysiwyg.js}"></script>
+
+    <link href="../static/css/style.css" rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link href="../static/css/viewer.min.css" th:href="@{/css/viewer.min.css}" rel="stylesheet">
+    
+
+</head>
+
+<body>
+	<div class="fakeloader"></div>
+    <header id="header">
+        <div class="mui-appbar mui--appbar-line-height">
+            <div class="mui-container-fluid">
+                <span>
+                    <a class="sidedrawer-toggle mui--visible-xs-inline-block mui--visible-sm-inline-block js-show-sidedrawer">☰</a>
+                    <a class="sidedrawer-toggle mui--hidden-xs mui--hidden-sm js-hide-sidedrawer">☰</a>
+                    <div class="logo_text">随记</div>
+                </span>
+                <div class="user_photo_div" th:each="item:${item}">
+                    <img id="photo" src="static/images/user.jpg" alt="" th:src="${item.photo}" data-toggle="modal" data-target=".bs-example-modal-lg">
+                    <input type="hidden" id="user_id" th:name="${item.id}">
+                    <i class="material-icons down_pull" id="down_pull_cli" onclick="down_pull()">keyboard_arrow_down</i>
+                    <ul class="sess_list" id="sess_list" style="display:none">
+                        <li data-toggle="modal" data-target=".bs-example-modal-lg">个人信息</li>
+                        <li class="hr_rr"></li>
+                        <li data-toggle="modal" data-target=".bs-example-modal-lg2">意见反馈</li>
+                        <li class="hr_rr"></li>
+                        <li onclick="outLogin()">退出登录</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div id="main" style="width:100%;height:100%">
+        <div id="sidedrawer" class="mui--no-user-select">
+            <div id="sidedrawer-brand" class="mui--appbar-line-height">
+                <div class="add_table">
+                    <span class="new_table">
+                    	<div style="font-size: 35px;display: inline-block;position: absolute;top: 11px;left: 95px;color: #2196F3;">+</div>&nbsp;&nbsp;新文档
+                    </span>
+                </div>
+            </div>
+            <div class="mui-divider"></div>
+            <ul class="notes_ul">
+                <li class="notes_li"id="for_myself" th:each="notes:${notes}">
+                    <div class="notes_title">
+                        <span>
+                            <i class="material-icons notes_li_icon">font_download</i>
+                        </span>
+                        <!-- <span class="notes_li_title">无标题笔记</span> -->
+                        <span class="notes_li_title" th:text="${notes.title}"></span>
+                    </div>
+                    <div class="notes_main">
+                        <span></span>
+                    </div>
+                    <div class="notes_footer">
+                        <div class="notes_footer_left">
+                            <span th:text="${#dates.format(notes.time, 'yyyy-MM-dd')}"></span>
+                        </div>
+                        <div class="notes_footer_right">
+                            <span>
+                            	<div style="display:none" th:utext="${notes.content}"></div>
+                                <i class="fa fa-trash-o fa-lg" th:data-join="@{/note/{id}(id=${notes.id})}" onclick="delete_notes(this)"></i>
+                                <i class="fa fa-share-alt fa-lg" data-toggle="modal" data-target=".bs-example-modal-lg3" th:data-join="@{{id}(id=${notes.id})}" onclick="set_share_note_id(this)"></i>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <!-- 分享的    -->
+                <li class="notes_li" id="for_share" th:each="notes:${share}">
+                    <div class="notes_title_share" >
+                        <span>
+                            <i class="material-icons notes_li_icon">font_download</i>
+                                                    <!-- <span class="notes_li_title">无标题笔记</span> -->
+                        <span class="notes_li_title" th:text="${notes.title}"></span>
+                        </span>
+                        <span>
+                        <span id="can_change" th:name="${notes.qx}"></span>
+                        	<i class="material-icons" style="color:silver">people</i>
+                        </span>
+                    </div>
+                    <div class="notes_main">
+                        <span></span>
+                    </div>
+                    <div class="notes_footer">
+                        <div class="notes_footer_left come_form_sb">
+                            <span th:text="来自+'&nbsp;'+${notes.username}+'&nbsp;'+的分享"></span>
+                        </div>
+                        <div class="notes_footer_right">
+                            <span>
+                            	<div style="display:none" th:utext="${notes.content}"></div>
+                            	<i class="fa fa-trash-o fa-lg" th:data-join="@{/note/{id}(id=${notes.id})}" style="display:none"></i>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                
+                
+            </ul>
+        </div>
+        <div id="content-wrapper">
+            <div class="mui--appbar-height"></div>
+            <div class="content_main">
+                <!-- <input class="content_title" type="text" placeholder="标题"> -->
+                <input class="content_title" type="text" placeholder="标题">
+                <div id="alerts"></div>
+                <div class="btn-toolbar top0" data-role="editor-toolbar" data-target="#editor">
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font"><i class="icon-font"></i><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="icon-text-height"></i>&nbsp;<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a data-edit="fontSize 5">
+                                    <font size="5">Huge</font>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-edit="fontSize 3">
+                                    <font size="3">Normal</font>
+                                </a>
+                            </li>
+                            <li>
+                                <a data-edit="fontSize 1">
+                                    <font size="1">Small</font>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="icon-bold"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="icon-italic"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="strikethrough" title="Strikethrough"><i class="icon-strikethrough"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="icon-underline"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i class="icon-list-ul"></i></a>
+                    </div>
+                    <div class="btn-group">
+                        <a class="btn" data-edit="insertorderedlist" title="Number list"><i class="icon-list-ol"></i></a>
+                    </div>
+                    <div class="btn-group">
+          				<a class="btn" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="icon-align-left"></i></a>
+                    </div>
+                    <div class="btn-group">
+          				<a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="icon-align-center"></i></a>
+                    </div>
+                    <div class="btn-group">
+          				<a class="btn" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="icon-align-right"></i></a>
+                    </div>
+                    <div class="btn-group">
+          				<a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="icon-align-justify"></i></a>
+                    </div>
+                    <div class="btn-group">
+<!--                         <a class="btn" style="border-top-right-radius: 4px;border-bottom-right-radius: 4px;"> onclick="insertphoto(this)"<i class="icon-picture"></i></a> -->
+                        <!-- <input type="file" style="display:none" onchange="insertphoto_onchange(this)" /> -->
+                                  <a class="btn" title="Insert picture (or just drag & drop)" id="pictureBtn"><i class="icon-picture"></i></a>
+          <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage" />
+                    </div>
+                    <input type="text" data-edit="inserttext" id="voiceBtn" x-webkit-speech="">
+                    <div class="save">
+                        <button type="button" class="btn save_button">保存</button>
+                    </div>
+                </div>
+
+                <div id="editor" class="editor_input">
+
+                </div>
+            </div>
+        </div>
+        <div class="user_mb" id="share_mb" style="display:none">
+        	<div class="share_div_card">
+        	    <div class="close_tranf_icon" onclick="for_share_div()">+</div>
+ 				<div class="col-lg-10 col-lg-offset-1 user_input_div">
+ 				    <div class="opinion_from_photo_put_div"></div>
+					<div class="select_user_div col-lg-12">
+						<input type="text" class="col-lg-10 col-md-10 col-sm-10 col-xs-10" placeholder="用户名">
+						<button class="col-lg-2 col-md-2 col-sm-2 col-xs-2">+</button>
+					</div>
+					<div class="share_user_div col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					</div>
+        		 </div> 
+        	</div>
+        </div>
+    </div>
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        		<img class="user_from_photo" src="../static/images/user.jpg" th:src="${item.photo}" onclick="change_photo()"/>
+      </div>
+      <form th:each="item:${item}">
+      <div class="modal-body">
+          <div class="form-group">
+            <input type="text" id="user_nickname" class="form-control" th:value="${item.nickname}" placeholder="昵称">
+          </div>
+		  <div class="form-group">
+            <span class="address_class">
+            		<select id="user_province" class="form-control province">
+                		<option th:text="${item.province}">请选择</option>
+            		</select>
+            		<select id="user_city" class="form-control city" style="margin-top:15px;">
+                		<option th:text="${item.city}">请选择</option>
+            		</select>
+            </span>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="user_mood" cols="30" rows="3" th:text="${item.mood}" placeholder="个性签名"></textarea>
+          </div>
+      	</div>
+      	<div class="modal-footer">
+        	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        	<button type="button" class="btn btn-primary" onclick="change_message(this)">保存</button>
+      	</div>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg2" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
+      </div>
+      <form>
+      <div class="modal-body paddi_top_0 paddi_bottom_0">
+          <div class="form-group">
+            <input type="text" id="user_nickname" class="form-control" disabled th:value="${sessionuser}">
+          </div>
+          <div class="form-group">
+          	<textarea id="user_opinion" class="form-control" cols="30" rows="5" placeholder="对随记的意见与建议"></textarea>
+          </div>
+      	</div>
+      	<div class="modal-footer">
+        	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        	<button type="button" class="btn btn-primary" onclick="sent_opinion(this)">发送</button>
+      	</div>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+    
+    
+<div class="modal fade bs-example-modal-lg3" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <form>
+      <div class="modal-body paddi_top_0 paddi_bottom_0">
+          <div class="form-group">
+            <input type="text" id="share_username" class="form-control" placeholder="分享的用户名">
+            <div id="share_user_list" class="share_user_list" style="display:none"></div>
+          </div>
+          <div class="form-group">
+          	<div class="form-control minheight" id="is_in_share"></div>
+          </div>
+      	</div>
+      	<div class="modal-footer">
+      	</div>
+      </form>
+    </div>
+    </div>
+  </div>
+</div> 
+    
+</body>
+<script src="../static/js/cxSelec/jquery.cxselect.min.js" th:src="@{/js/cxSelec/jquery.cxselect.min.js}"></script>
+<script th:src="@{/js/fakeLoader.js}"></script>
+<script>
+ 	$(document).ready(function(){
+        $(".fakeloader").fakeLoader({
+            bgColor:"#2196F3",
+            spinner:"spinner1"
+        });
+    });
+</script>
+<script>
+
+    $('.address_class').cxSelect({          // 如果服务器不支持 .json 类型文件，请将文件改为 .js 文件
+        url: "[[@{/js/cxSelec/cityData.min.json}]]",
+        selects: ['province', 'city'],  // 数组，请注意顺序
+        emptyStyle: 'block'
+    });
+    $(".save_button").on("click", function () {
+        ed_change.update();
+    })
+    $(".editor_input").on("focus", function () {
+        is_focus = true;
+        old_content = $(".editor_input").html();
+    })
+        .on("blur", function () {
+            if (old_content === $(".editor_input").html())
+                return
+            if (is_focus) {
+                ed_change.editor_change_span(this);
+                ed_change.update();
+            }
+            is_focus = false;
+        })
+        .on("keydown", function(){
+            setTimeout(function(){
+                ed_change.editor_change_span(this);
+            }.bind(this),0);
+        });
+
+    $(".content_title").on("change", function () {
+        ed_change.input_change_span(this);
+        ed_change.update();
+    });
+    ed_change.input_change_span();
+    $(".notes_ul .notes_li").each(function (x, e) {
+        if (x === 0) {
+            $(this).addClass("active");
+        }
+        e.addEventListener("click", function () {
+            ed_change.change_liClass($(this));
+        });
+
+    });
+    $('#exampleModal').on('show.bs.modal', function (event) {
+    	  var button = $(event.relatedTarget) // Button that triggered the modal
+    	  var recipient = button.data('whatever') // Extract info from data-* attributes
+    	  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    	  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    	  var modal = $(this)
+    	  modal.find('.modal-title').text('New message to ' + recipient)
+    	  modal.find('.modal-body input').val(recipient)
+    	})
+</script>
+
+</html>
